@@ -3,8 +3,8 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "composer install --no-dev && vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build": "vite build"
     },
     "dependencies": {
         "@laravel/passkeys": "^0.2.0",
