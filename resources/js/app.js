@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import '../../vendor/livewire/flux/dist/flux.css';
+import '~flux/dist/flux.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 

@@ -7,7 +7,7 @@ import path from 'path';
 export default defineConfig({
     resolve: {
         alias: {
-            '@vendor': path.resolve(__dirname, 'vendor'),
+            '~flux/dist/flux.css': path.resolve(__dirname, 'vendor/livewire/flux/dist/flux.css'),
         },
     },
     plugins: [
