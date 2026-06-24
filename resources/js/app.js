@@ -1,5 +1,5 @@
 import L from 'leaflet';
-import '~flux/dist/flux.css';
+import '../css/vendor/flux.css';
 
 delete L.Icon.Default.prototype._getIconUrl;
 
