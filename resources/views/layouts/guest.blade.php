@@ -2,6 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     </head>
     <body class="h-screen flex flex-col overflow-hidden bg-white dark:bg-zinc-800">
         <header class="sticky top-0 z-50 shrink-0 border-b border-zinc-200 bg-white/90 dark:border-zinc-700 dark:bg-zinc-900/90 backdrop-blur-sm">
