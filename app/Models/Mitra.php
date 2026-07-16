@@ -15,6 +15,9 @@ class Mitra extends Model
         'pemilik',
         'koordinat',
         'status_aktif',
+        'sertifikat',
+        'link_gmap',
+        'foto',
     ];
 
     public function kecamatan(): BelongsTo

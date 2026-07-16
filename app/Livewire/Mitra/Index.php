@@ -6,9 +6,11 @@ use App\Models\Mitra;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Index extends Component
 {
+    use WithFileUploads;
     public $mitras;
 
     // Form state
@@ -19,7 +21,12 @@ class Index extends Component
     public $kecamatan_alamat = '';
     public $kelurahan_alamat = '';
     public $koordinat;
+    public $link_gmap;
     public $status_aktif = true;
+    public $sertifikat;
+    public $sertifikat_lama;
+    public $foto;
+    public $foto_lama;
 
     // Dependent Dropdown state
     public $kecamatans = [];
@@ -74,7 +81,10 @@ class Index extends Component
 
             $this->kelurahan_alamat = $mitra->kelurahan_alamat;
             $this->koordinat = $mitra->koordinat;
+            $this->link_gmap = $mitra->link_gmap;
             $this->status_aktif = $mitra->status_aktif;
+            $this->sertifikat_lama = $mitra->sertifikat;
+            $this->foto_lama = $mitra->foto;
         }
     }
 
@@ -87,6 +97,9 @@ class Index extends Component
             'kecamatan_alamat' => 'nullable|string',
             'kelurahan_alamat' => 'nullable|string',
             'koordinat' => 'nullable|string',
+            'link_gmap' => 'nullable|string',
+            'sertifikat' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'status_aktif' => 'boolean',
         ]);
 
@@ -100,7 +113,14 @@ class Index extends Component
                     'kecamatan_alamat' => $this->kecamatan_alamat,
                     'kelurahan_alamat' => $this->kelurahan_alamat,
                     'koordinat' => $this->koordinat,
+                    'link_gmap' => $this->link_gmap,
                     'status_aktif' => $this->status_aktif,
+                    'sertifikat' => $this->sertifikat 
+                        ? $this->sertifikat->store('sertifikat', 'public') 
+                        : $this->sertifikat_lama,
+                    'foto' => $this->foto 
+                        ? $this->foto->store('foto', 'public') 
+                        : $this->foto_lama,
                 ]);
             }
         } else {
@@ -111,15 +131,21 @@ class Index extends Component
                 'kecamatan_alamat' => $this->kecamatan_alamat,
                 'kelurahan_alamat' => $this->kelurahan_alamat,
                 'koordinat' => $this->koordinat,
+                'link_gmap' => $this->link_gmap,
                 'status_aktif' => $this->status_aktif,
+                'sertifikat' => $this->sertifikat 
+                    ? $this->sertifikat->store('sertifikat', 'public') 
+                    : null,
+                'foto' => $this->foto 
+                    ? $this->foto->store('foto', 'public') 
+                    : null,
             ]);
         }
 
         $this->loadMitras();
-        
-        // Attempt to close modal via JS
-        $this->js('document.querySelector("[data-modal=\"mitra-form-modal\"]")?.close()');
-        $this->js('window.dispatchEvent(new CustomEvent("modal-close", {detail: {name: "mitra-form-modal"}}))');
+        $this->resetForm();
+
+        $this->js('document.querySelector("[data-close-mitra-modal]")?.click()');
     }
 
     public function deleteMitra($id)
@@ -137,7 +163,12 @@ class Index extends Component
         $this->kecamatan_alamat = '';
         $this->kelurahan_alamat = '';
         $this->koordinat = '';
+        $this->link_gmap = '';
         $this->status_aktif = true;
+        $this->sertifikat = null;
+        $this->sertifikat_lama = null;
+        $this->foto = null;
+        $this->foto_lama = null;
         $this->kelurahans = [];
     }
 

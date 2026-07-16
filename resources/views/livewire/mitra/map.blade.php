@@ -80,24 +80,42 @@
                 <div class="flex-1 overflow-y-auto" x-data="{ detailId: null }">
                     @forelse($mitraList as $mitra)
                         <div
-                            class="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer"
-                            x-on:click="detailId = (detailId === {{ $mitra['id'] }} ? null : {{ $mitra['id'] }})"
-                        >
+                            class="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors"
+                            :class="{ 'bg-zinc-100 dark:bg-zinc-800': detailId === {{ $mitra['id'] }} }"
+                            x-on:click="
+                                detailId = (detailId === {{ $mitra['id'] }} ? null : {{ $mitra['id'] }});
+                                window.dispatchEvent(new CustomEvent('fly-to-mitra', {
+                                    detail: { id: {{ $mitra['id'] }}, lat: {{ $mitra['lat'] ?? 'null' }}, lng: {{ $mitra['lng'] ?? 'null' }} }
+                                }))
+                            ">
                             <div class="flex items-start justify-between gap-2">
                                 <div class="min-w-0">
                                     <div class="text-sm font-medium text-zinc-900 dark:text-white truncate">{{ $mitra['nama'] }}</div>
                                     <div class="text-xs text-zinc-500">{{ $mitra['kecamatan'] ?? '-' }}</div>
                                 </div>
-                                <button
-                                    type="button"
-                                    class="shrink-0 rounded p-1 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-700"
-                                    x-on:click.stop="window.dispatchEvent(new CustomEvent('fly-to-mitra', { detail: { id: {{ $mitra['id'] }}, lat: {{ $mitra['lat'] ?? 'null' }}, lng: {{ $mitra['lng'] ?? 'null' }} } }))"
-                                >
-                                    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </button>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    @if($mitra['sertifikat'])
+                                        <a href="{{ asset('storage/'.$mitra['sertifikat']) }}" download
+                                            class="rounded p-1 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-700"
+                                            x-on:click.stop=""
+                                            title="Download Sertifikat">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                    @if($mitra['link_gmap'])
+                                        <a href="{{ $mitra['link_gmap'] }}" target="_blank" rel="noopener"
+                                            class="rounded p-1 text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:text-zinc-300 dark:hover:bg-zinc-700"
+                                            x-on:click.stop=""
+                                            title="Buka di Google Maps">
+                                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
+                                </div>
                             </div>
 
                             <div
@@ -110,13 +128,6 @@
                                 <p><span class="font-medium text-zinc-700 dark:text-zinc-300">Alamat:</span> {{ $mitra['alamat'] }}</p>
                                 <p><span class="font-medium text-zinc-700 dark:text-zinc-300">Pemilik:</span> {{ $mitra['pemilik'] }}</p>
                                 <p><span class="font-medium text-zinc-700 dark:text-zinc-300">Kelurahan:</span> {{ $mitra['kelurahan'] ?? '-' }}</p>
-                                <p>
-                                    <span class="font-medium text-zinc-700 dark:text-zinc-300">Status:</span>
-                                    <span class="{{ $mitra['status_aktif'] ? 'text-green-600' : 'text-red-500' }}">{{ $mitra['status_aktif'] ? 'Aktif' : 'Tidak Aktif' }}</span>
-                                </p>
-                                @if($mitra['koordinat'])
-                                    <p><span class="font-medium text-zinc-700 dark:text-zinc-300">Koordinat:</span> {{ $mitra['koordinat'] }}</p>
-                                @endif
                             </div>
                         </div>
                     @empty
@@ -136,6 +147,9 @@
                         markersMap: {},
 
                         init() {
+                            if (this.map) return;
+                            const container = document.getElementById('map');
+                            if (!container || container._leaflet_id) return;
                             const padang = [-0.947083, 100.417181];
 
                             this.map = L.map('map').setView(padang, 13);
@@ -152,7 +166,8 @@
                             this.updateMarkers(@js($markers));
 
                             $wire.on('markers-updated', (payload) => {
-                                this.updateMarkers(payload[0].markers);
+                                const markers = Array.isArray(payload) ? payload[0]?.markers : payload?.markers;
+                                if (markers) this.updateMarkers(markers);
                             });
 
                             window.addEventListener('fly-to-mitra', (e) => {
@@ -187,6 +202,7 @@
                                     const kelName = m.kelurahan ?? '-';
 
                                     const popupContent = '<div style=\'min-width:200px\'>'
+                                            + (m.foto ? '<img src=\'' + m.foto + '\' style=\'width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:6px\'>' : '')
                                             + '<b>' + m.nama + '</b><br>'
                                             + '<span style=\'color:#666\'>' + m.alamat + '</span><br>'
                                             + 'Pemilik: ' + m.pemilik + '<br>'

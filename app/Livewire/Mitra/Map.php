@@ -120,6 +120,9 @@ class Map extends Component
                 'lat' => is_numeric($lat) ? (float) $lat : null,
                 'lng' => is_numeric($lng) ? (float) $lng : null,
                 'status_aktif' => $mitra->status_aktif,
+                'sertifikat' => $mitra->sertifikat,
+                'link_gmap' => $mitra->link_gmap,
+                'foto' => $mitra->foto ? asset('storage/' . $mitra->foto) : null,
             ];
         })->toArray();
 

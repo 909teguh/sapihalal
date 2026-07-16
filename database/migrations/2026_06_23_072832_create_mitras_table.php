@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('pemilik');
             $table->string('koordinat')->nullable();
             $table->boolean('status_aktif')->default(true);
+            $table->string('sertifikat')->nullable();
+            $table->string('link_gmap')->nullable();
             $table->timestamps();
         });
     }
