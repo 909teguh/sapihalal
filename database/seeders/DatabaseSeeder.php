@@ -21,5 +21,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+        $this->call([
+            KecamatanSeeder::class,
+            KelurahanSeeder::class, // Pastikan Kecamatan dipanggil lebih dulu
+        ]);
     }
 }
