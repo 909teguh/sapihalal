@@ -50,53 +50,6 @@ Perintah `composer setup` akan menjalankan:
 5. `npm install`
 6. `npm run build`
 
-Seeder akan mengisi data kecamatan (11), kelurahan (104), role, permission, dan satu user uji (`test@example.com`).
-
-## Development
-
-```bash
-composer dev
-```
-
-Menjalankan secara paralel: `php artisan serve` + `php artisan queue:listen` + `npm run dev`.
-
-Akses aplikasi di `https://sapihalal.test` (jika menggunakan Herd) atau `http://localhost:8000`.
-
-## Testing
-
-```bash
-# Jalankan semua tes
-composer test
-
-# Hanya unit/feature test
-php artisan test --compact
-
-# Filter tes tertentu
-php artisan test --compact --filter=DashboardTest
-```
-
-## Roles & Permissions
-
-| Role | Permission |
-|---|---|
-| **Superadmin** | Semua (`manage-users`, `manage-roles`, `manage-permissions`, `manage-mitras`, `manage-sertifikat-veteriner`) |
-| **Admin** | `manage-mitras`, `manage-sertifikat-veteriner` |
-| **Guest** | Tidak ada |
-
-## Routes
-
-| Path | Halaman | Akses |
-|---|---|---|
-| `/` | Peta Mitra (publik) | Publik |
-| `/dashboard` | Dashboard Analitik | Authenticated |
-| `/mitras` | Manajemen Mitra | `manage-mitras` |
-| `/sertifikat-veteriner` | Manajemen Sertifikat | `manage-sertifikat-veteriner` |
-| `/admin/users` | Manajemen User | Superadmin |
-| `/admin/roles` | Manajemen Role | Superadmin |
-| `/admin/permissions` | Manajemen Permission | Superadmin |
-| `/settings/profile` | Pengaturan Profil | Authenticated |
-| `/settings/security` | Keamanan (2FA, Passkeys) | Authenticated |
-
 ## Lisensi
 
 MIT
