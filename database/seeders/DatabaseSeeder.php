@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
         $this->call([
             KecamatanSeeder::class,
-            KelurahanSeeder::class, // Pastikan Kecamatan dipanggil lebih dulu
+            KelurahanSeeder::class,
+            RolePermissionSeeder::class,
         ]);
     }
 }

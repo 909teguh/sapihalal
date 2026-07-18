@@ -28,6 +28,7 @@ class KecamatanSeeder extends Seeder
         $kecamatan = array_map(function ($item) use ($now) {
             $item['created_at'] = $now;
             $item['updated_at'] = $now;
+
             return $item;
         }, $data);
 

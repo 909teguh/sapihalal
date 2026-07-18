@@ -17,9 +17,9 @@ return new class extends Migration
 
             // Relasi Foreign Key
             $table->foreign('kecamatan_code')
-                  ->references('code')
-                  ->on('kecamatan')
-                  ->onDelete('cascade');
+                ->references('code')
+                ->on('kecamatan')
+                ->onDelete('cascade');
         });
     }
 

@@ -10,7 +10,9 @@ class Kelurahan extends Model
     protected $table = 'kelurahan';
 
     protected $primaryKey = 'code';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

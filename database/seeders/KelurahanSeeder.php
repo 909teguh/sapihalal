@@ -10,7 +10,7 @@ class KelurahanSeeder extends Seeder
     public function run(): void
     {
         $now = now();
-        
+
         $data = [
             // Padang Selatan (13.71.01)
             ['kecamatan_code' => '13.71.01', 'code' => '13.71.01.1001', 'name' => 'Belakang Pondok'],
@@ -142,14 +142,15 @@ class KelurahanSeeder extends Seeder
         // Karena data kelurahan cukup besar, kita gunakan chunk insert
         // untuk menghemat memory dan mengoptimasi eksekusi kueri
         $chunkedData = array_chunk($data, 50);
-        
+
         foreach ($chunkedData as $chunk) {
             $kelurahan = array_map(function ($item) use ($now) {
                 $item['created_at'] = $now;
                 $item['updated_at'] = $now;
+
                 return $item;
             }, $chunk);
-            
+
             DB::table('kelurahan')->insert($kelurahan);
         }
     }

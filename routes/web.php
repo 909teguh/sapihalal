@@ -1,12 +1,34 @@
 <?php
 
+use App\Livewire\Dashboard\Index as DashboardIndex;
+use App\Livewire\Mitra\Index;
+use App\Livewire\Mitra\Map;
+use App\Livewire\SertifikatVeteriner\Index as SertifikatVeterinerIndex;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', App\Livewire\Mitra\Map::class)->name('home');
+Route::get('/', Map::class)->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
-    Route::get('mitras', App\Livewire\Mitra\Index::class)->name('mitras.index');
+    Route::get('dashboard', DashboardIndex::class)->name('dashboard');
 });
+
+Route::middleware(['auth', 'verified', 'permission:manage-mitras'])
+    ->group(function () {
+        Route::get('mitras', Index::class)->name('mitras.index');
+    });
+
+Route::middleware(['auth', 'verified', 'permission:manage-sertifikat-veteriner'])
+    ->group(function () {
+        Route::get('sertifikat-veteriner', SertifikatVeterinerIndex::class)->name('sertifikat-veteriner.index');
+    });
+
+Route::middleware(['auth', 'verified', 'role:Superadmin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+        Route::get('users', App\Livewire\Admin\Users\Index::class)->name('users');
+        Route::get('roles', App\Livewire\Admin\Roles\Index::class)->name('roles');
+        Route::get('permissions', App\Livewire\Admin\Permissions\Index::class)->name('permissions');
+    });
 
 require __DIR__.'/settings.php';

@@ -2,20 +2,25 @@
 
 namespace App\Livewire\Mitra;
 
-use App\Models\Mitra;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Models\Mitra;
 use Livewire\Component;
 
 class Map extends Component
 {
     public $kecamatan_filter = '';
+
     public $kelurahan_filter = '';
+
     public $kelurahan_search = '';
 
     public $kecamatans = [];
+
     public $filteredKelurahans = [];
+
     public $mitraList = [];
+
     public $markers = [];
 
     public function mount()
@@ -53,7 +58,7 @@ class Map extends Component
                 $query->where('kecamatan_code', $this->kecamatan_filter);
             }
 
-            $query->where('name', 'like', '%' . $value . '%');
+            $query->where('name', 'ilike', '%'.$value.'%');
             $this->filteredKelurahans = $query->get()->toArray();
         } else {
             if ($this->kecamatan_filter) {
@@ -122,18 +127,18 @@ class Map extends Component
                 'status_aktif' => $mitra->status_aktif,
                 'sertifikat' => $mitra->sertifikat,
                 'link_gmap' => $mitra->link_gmap,
-                'foto' => $mitra->foto ? asset('storage/' . $mitra->foto) : null,
+                'foto' => $mitra->foto ? asset('storage/'.$mitra->foto) : null,
             ];
         })->toArray();
 
-        $this->markers = array_values(array_filter($this->mitraList, fn($m) => $m['lat'] && $m['lng']));
+        $this->markers = array_values(array_filter($this->mitraList, fn ($m) => $m['lat'] && $m['lng']));
 
         $this->dispatch('markers-updated', markers: $this->markers);
     }
 
     public function getSelectedKelurahanNameProperty()
     {
-        if (!$this->kelurahan_filter) {
+        if (! $this->kelurahan_filter) {
             return null;
         }
 

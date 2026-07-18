@@ -2,34 +2,48 @@
 
 namespace App\Livewire\Mitra;
 
-use App\Models\Mitra;
 use App\Models\Kecamatan;
 use App\Models\Kelurahan;
+use App\Models\Mitra;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class Index extends Component
 {
     use WithFileUploads;
+
     public $mitras;
 
     // Form state
     public $mitra_id;
+
     public $nama;
+
     public $alamat;
+
     public $pemilik;
+
     public $kecamatan_alamat = '';
+
     public $kelurahan_alamat = '';
+
     public $koordinat;
+
     public $link_gmap;
+
     public $status_aktif = true;
+
     public $sertifikat;
+
     public $sertifikat_lama;
+
     public $foto;
+
     public $foto_lama;
 
     // Dependent Dropdown state
     public $kecamatans = [];
+
     public $kelurahans = [];
 
     // Modal state
@@ -74,7 +88,7 @@ class Index extends Component
             $this->alamat = $mitra->alamat;
             $this->pemilik = $mitra->pemilik;
             $this->kecamatan_alamat = $mitra->kecamatan_alamat;
-            
+
             if ($this->kecamatan_alamat) {
                 $this->kelurahans = Kelurahan::where('kecamatan_code', $this->kecamatan_alamat)->get();
             }
@@ -115,11 +129,11 @@ class Index extends Component
                     'koordinat' => $this->koordinat,
                     'link_gmap' => $this->link_gmap,
                     'status_aktif' => $this->status_aktif,
-                    'sertifikat' => $this->sertifikat 
-                        ? $this->sertifikat->store('sertifikat', 'public') 
+                    'sertifikat' => $this->sertifikat
+                        ? $this->sertifikat->store('sertifikat', 'public')
                         : $this->sertifikat_lama,
-                    'foto' => $this->foto 
-                        ? $this->foto->store('foto', 'public') 
+                    'foto' => $this->foto
+                        ? $this->foto->store('foto', 'public')
                         : $this->foto_lama,
                 ]);
             }
@@ -133,11 +147,11 @@ class Index extends Component
                 'koordinat' => $this->koordinat,
                 'link_gmap' => $this->link_gmap,
                 'status_aktif' => $this->status_aktif,
-                'sertifikat' => $this->sertifikat 
-                    ? $this->sertifikat->store('sertifikat', 'public') 
+                'sertifikat' => $this->sertifikat
+                    ? $this->sertifikat->store('sertifikat', 'public')
                     : null,
-                'foto' => $this->foto 
-                    ? $this->foto->store('foto', 'public') 
+                'foto' => $this->foto
+                    ? $this->foto->store('foto', 'public')
                     : null,
             ]);
         }
