@@ -17,6 +17,10 @@ php artisan migrate --force
 echo "==> Creating storage symlink..."
 php artisan storage:link --force 2>/dev/null || true
 
+# Discover packages (karena composer install dijalankan dengan --no-scripts)
+echo "==> Discovering packages..."
+php artisan package:discover --ansi
+
 # Cache config, route, dan view untuk performa production
 echo "==> Optimizing application..."
 php artisan optimize

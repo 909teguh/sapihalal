@@ -47,8 +47,8 @@ COPY . .
 #    (akan dihapus setelah build; runtime menggunakan env vars dari Render)
 RUN echo 'APP_KEY=base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=' > .env
 
-# 9. Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# 9. Install PHP dependencies (--no-scripts agar php artisan tidak dijalankan saat build)
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # 10. Install Node dependencies dan build frontend assets
 RUN npm ci && npm run build
