@@ -1,0 +1,77 @@
+# render.yaml — Blueprint untuk deploy Siasuh ke Render.com
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: siasuh
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      # === Aplikasi ===
+      - key: APP_NAME
+        value: Siasuh
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true   # Render auto-generate APP_KEY yang aman
+      - key: APP_URL
+        sync: false           # Isi manual setelah service pertama kali deploy
+
+      # === Logging (stdout agar terlihat di Render dashboard) ===
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: error
+
+      # === Database (auto-linked ke Render PostgreSQL di bawah) ===
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: siasuh-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: siasuh-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: siasuh-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: siasuh-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: siasuh-db
+          property: password
+
+      # === Session & Cache (pakai database PostgreSQL) ===
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_LIFETIME
+        value: "120"
+      - key: CACHE_STORE
+        value: database
+
+      # === Queue (sync karena tidak ada worker) ===
+      - key: QUEUE_CONNECTION
+        value: sync
+
+      # === Filesystem ===
+      - key: FILESYSTEM_DISK
+        value: local
+
+      # === Security ===
+      - key: BCRYPT_ROUNDS
+        value: "12"
+
+databases:
+  - name: siasuh-db
+    databaseName: siasuh
+    user: siasuh
+    plan: free

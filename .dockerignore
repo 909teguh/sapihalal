@@ -1,0 +1,44 @@
+# Dependencies (will be installed during build)
+/node_modules
+/vendor
+
+# Build output (will be generated during build)
+/public/build
+/public/hot
+/public/storage
+
+# Environment files (use Render environment variables instead)
+.env
+.env.*
+!.env.example
+
+# Git & IDE
+/.git
+/.github
+/.agents
+/.vscode
+/.idea
+/.fleet
+/.nova
+/.zed
+
+# Laravel storage (generated at runtime)
+/storage/logs
+/storage/framework/cache
+/storage/framework/sessions
+/storage/framework/views
+/storage/app/public
+
+# Test & dev files
+/tests
+phpunit.xml
+phpstan.neon
+pint.json
+*.md
+
+# Misc
+npm-debug.log
+yarn-error.log
+/.phpunit.cache
+.phpunit.result.cache
+/auth.json
