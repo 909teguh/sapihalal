@@ -16,7 +16,7 @@ services:
       - key: APP_DEBUG
         value: "false"
       - key: APP_KEY
-        generateValue: true   # Render auto-generate APP_KEY yang aman
+        sync: false           # Isi manual di dashboard dengan output dari `php artisan key:generate --show`
       - key: APP_URL
         sync: false           # Isi manual setelah service pertama kali deploy
 
