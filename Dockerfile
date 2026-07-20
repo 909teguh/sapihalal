@@ -56,17 +56,25 @@ RUN npm ci && npm run build
 # 11. Hapus .env sementara; runtime pakai environment variables dari Render
 RUN rm -f .env
 
-# 12. Set permissions untuk folder penting Laravel
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
+# 12. Buat direktori storage yang dibutuhkan Laravel
+#     (dikecualikan .dockerignore tapi harus ada di container)
+RUN mkdir -p storage/framework/views \
+    storage/framework/cache/data \
+    storage/framework/sessions \
+    storage/app/public \
+    bootstrap/cache
 
-# 13. Arahkan Apache DocumentRoot ke /public
+# 13. Set permissions untuk folder penting Laravel
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+# 14. Arahkan Apache DocumentRoot ke /public
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
 
-# 14. Pastikan start.sh bisa dieksekusi
+# 15. Pastikan start.sh bisa dieksekusi
 RUN chmod +x start.sh
 
 EXPOSE 80
